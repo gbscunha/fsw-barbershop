@@ -1,15 +1,25 @@
 "use client"
 
-import { Button } from "./_components/ui/button"
 import Header from "./_components/header"
+import Image from "next/image"
+import BarbershopItem from "./_components/barbershop-item"
+import { Button } from "./_components/ui/button"
 import { Input } from "./_components/ui/input"
 import { SearchIcon } from "lucide-react"
-import Image from "next/image"
 import { Card, CardContent } from "./_components/ui/card"
-import { Badge } from "./_components/ui/badge"
-import { Avatar, AvatarImage } from "./_components/ui/avatar"
+import { db } from "./_lib/prisma"
+import { quickSearchOptions } from "./_constants/search"
+import BookingItem from "./_components/booking-item"
 
-const Home = () => {
+// eslint-disable-next-line @next/next/no-async-client-component
+const Home = async () => {
+  //Chamando meu banco de dados
+  const barbershops = await db.barbershop.findMany({})
+  const popularBarbershops = await db.barbershop.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  })
   return (
     <div>
       {/* Header */}
@@ -17,7 +27,7 @@ const Home = () => {
       <div className="p-5">
         {/* Texto */}
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
-        <p>Sexta, 09 de agosto.</p>
+        <p>Sábado, 21 de Setembro.</p>
 
         {/* Busca */}
         <div className="mt-6 flex items-center gap-2">
@@ -25,6 +35,21 @@ const Home = () => {
           <Button>
             <SearchIcon />
           </Button>
+        </div>
+
+        {/* Busca rápida */}
+        <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchOptions.map((option) => (
+            <Button className="gap-2" variant="secondary" key={option.title}>
+              <Image
+                src={option.imageUrl}
+                width={16}
+                height={16}
+                alt={option.title}
+              />
+              {option.title}
+            </Button>
+          ))}
         </div>
 
         {/* Imagem */}
@@ -38,32 +63,36 @@ const Home = () => {
         </div>
 
         {/* Agendamento */}
+        <BookingItem />
+
+        {/* Barbearias recomendadas */}
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
+          Recomendados
         </h2>
-        <Card>
-          <CardContent className="flex justify-between p-0">
-            {/* Div da Esquerda */}
-            <div className="flex flex-col gap-2 py-5 pl-5">
-              <Badge className="w-fit">Confirmado</Badge>
-              <h3 className="font-semibold">Corte de cabelo</h3>
-              {/* Avatar */}
-              <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png" />
-                </Avatar>
-                <p className="text-sm">Barbearia FSW</p>
-              </div>
-            </div>
-            {/* Div da direita */}
-            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
-              <p className="text-sm">Agosto</p>
-              <p className="text-2xl">05</p>
-              <p className="text-sm">20:00</p>
-            </div>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {barbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
+        {/* Barbearias populares */}
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Populares
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {popularBarbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer>
+        <Card className="px-5 py-6">
+          <CardContent className="text-sm text-gray-400">
+            © 2024 Copyright <span className="font-bold">FSW Barber</span>
           </CardContent>
         </Card>
-      </div>
+      </footer>
     </div>
   )
 }
