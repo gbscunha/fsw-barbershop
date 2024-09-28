@@ -1,5 +1,3 @@
-"use client"
-
 import Header from "./_components/header"
 import Image from "next/image"
 import BarbershopItem from "./_components/barbershop-item"
@@ -11,7 +9,6 @@ import { db } from "./_lib/prisma"
 import { quickSearchOptions } from "./_constants/search"
 import BookingItem from "./_components/booking-item"
 
-// eslint-disable-next-line @next/next/no-async-client-component
 const Home = async () => {
   //Chamando meu banco de dados
   const barbershops = await db.barbershop.findMany({})
@@ -27,7 +24,7 @@ const Home = async () => {
       <div className="p-5">
         {/* Texto */}
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
-        <p>Sábado, 21 de Setembro.</p>
+        <p>Terça, 24 de Setembro.</p>
 
         {/* Busca */}
         <div className="mt-6 flex items-center gap-2">
@@ -84,15 +81,6 @@ const Home = async () => {
           ))}
         </div>
       </div>
-
-      {/* Footer */}
-      <footer>
-        <Card className="px-5 py-6">
-          <CardContent className="text-sm text-gray-400">
-            © 2024 Copyright <span className="font-bold">FSW Barber</span>
-          </CardContent>
-        </Card>
-      </footer>
     </div>
   )
 }
