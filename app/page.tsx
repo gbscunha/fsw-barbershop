@@ -2,12 +2,10 @@ import Header from "./_components/header"
 import Image from "next/image"
 import BarbershopItem from "./_components/barbershop-item"
 import { Button } from "./_components/ui/button"
-import { Input } from "./_components/ui/input"
-import { SearchIcon } from "lucide-react"
-import { Card, CardContent } from "./_components/ui/card"
 import { db } from "./_lib/prisma"
 import { quickSearchOptions } from "./_constants/search"
 import BookingItem from "./_components/booking-item"
+import Search from "./_components/search"
 
 const Home = async () => {
   //Chamando meu banco de dados
@@ -24,14 +22,11 @@ const Home = async () => {
       <div className="p-5">
         {/* Texto */}
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
-        <p>Terça, 24 de Setembro.</p>
+        <p>Sábado, 19 de Outubro.</p>
 
         {/* Busca */}
-        <div className="mt-6 flex items-center gap-2">
-          <Input placeholder="Faça sua busca..." />
-          <Button>
-            <SearchIcon />
-          </Button>
+        <div className="mt-6">
+          <Search />
         </div>
 
         {/* Busca rápida */}

@@ -1,7 +1,6 @@
 import { BarbershopService } from "@prisma/client"
 import { Card, CardContent } from "./ui/card"
 import Image from "next/image"
-import { Decimal } from "@prisma/client/runtime/library"
 import { Button } from "./ui/button"
 
 interface ServiceItemProps {
