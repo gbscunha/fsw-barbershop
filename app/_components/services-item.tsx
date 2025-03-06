@@ -118,7 +118,6 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
         minutes: Number(minute),
       })
       await createBooking({
-        userId: (data?.user as any).id,
         serviceId: service.id,
         date: newDate,
       })
