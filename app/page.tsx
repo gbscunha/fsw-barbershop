@@ -7,6 +7,8 @@ import { quickSearchOptions } from "./_constants/search"
 import BookingItem from "./_components/booking-item"
 import Search from "./_components/search"
 import Link from "next/link"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 const Home = async () => {
   //Chamando meu banco de dados
@@ -23,7 +25,11 @@ const Home = async () => {
       <div className="p-5">
         {/* Texto */}
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
-        <p>Terça, 17 de Dezembro.</p>
+        <p>
+          {format(Date.now(), "PPPP", {
+            locale: ptBR,
+          })}
+        </p>
 
         {/* Busca */}
         <div className="mt-6">
