@@ -9,15 +9,39 @@ import Search from "./_components/search"
 import Link from "next/link"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { authOptions } from "./_lib/auth"
+import { getServerSession } from "next-auth"
 
 const Home = async () => {
-  //Chamando meu banco de dados
+  const session = await getServerSession(authOptions)
   const barbershops = await db.barbershop.findMany({})
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
       name: "desc",
     },
   })
+  // Se o usuário estiver logado, busca os agendamentos, senão, retorna um array vazio.
+  const confirmedBookings = session?.user
+    ? await db.booking.findMany({
+        where: {
+          userId: (session.user as any).id,
+          date: {
+            gte: new Date(),
+          },
+        },
+        include: {
+          service: {
+            include: {
+              barbershop: true,
+            },
+          },
+        },
+        orderBy: {
+          date: "asc",
+        },
+      })
+    : []
+
   return (
     <div>
       {/* Header */}
@@ -25,7 +49,7 @@ const Home = async () => {
       <div className="p-5">
         {/* Texto */}
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
-        <p>
+        <p className="capitalize">
           {format(Date.now(), "PPPP", {
             locale: ptBR,
           })}
@@ -67,9 +91,15 @@ const Home = async () => {
             alt="Agende nos melhores com FSW Barber"
           />
         </div>
-
+        <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
+          Agendamentos
+        </h2>
         {/* Agendamento */}
-        <BookingItem />
+        <div className="mt-6 flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+          {confirmedBookings.map((booking) => (
+            <BookingItem key={booking.id} booking={booking} />
+          ))}
+        </div>
 
         {/* Barbearias recomendadas */}
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
